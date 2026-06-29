@@ -46,7 +46,7 @@
 
         /* --- SCALED TYPOGRAPHY (67% of original) --- */
         h1 {
-            font-size: clamp(2.3rem, 6.7vw, 5.3rem); /* Scaled down */
+            font-size: clamp(2.3rem, 6.7vw, 5.3rem); 
             font-weight: 900;
             text-transform: uppercase;
             line-height: 0.9;
@@ -56,14 +56,14 @@
         }
 
         h2 {
-            font-size: clamp(1.3rem, 4vw, 3.3rem); /* Scaled down */
+            font-size: clamp(1.3rem, 4vw, 3.3rem); 
             text-transform: uppercase;
             font-weight: 900;
             margin-bottom: 30px;
         }
 
         p {
-            font-size: clamp(0.8rem, 2vw, 1rem); /* Scaled down */
+            font-size: clamp(0.8rem, 2vw, 1rem); 
             font-weight: 600;
             max-width: 600px;
             text-align: center;
@@ -104,7 +104,8 @@
             position: relative;
         }
 
-        #hero-sec { background-color: transparent; }
+        /* Fixed Section 1 to be white */
+        #hero-sec { background-color: #FFF; }
         #globe-sec { background-color: #FFF; }
         #game-sec { 
             background-color: var(--accent-yellow); 
@@ -112,7 +113,7 @@
             overflow: hidden;
         }
         #marquee-sec { background-color: var(--text-color); color: #FFF; overflow: hidden; min-height: 30vh;}
-        #cta-sec { background-color: transparent; }
+        #cta-sec { background-color: #FFF; }
 
         /* --- BUTTONS --- */
         button {
@@ -192,14 +193,14 @@
             display: block;
             width: 100%;
             height: 100%;
-            cursor: none; /* Hide default cursor to show broom */
+            cursor: none; 
         }
         
         .game-overlay {
             position: absolute;
             top: 40px;
             text-align: center;
-            pointer-events: none; /* Let mouse interact with canvas behind text */
+            pointer-events: none; 
         }
 
         /* --- MARQUEE (SECTION 4) --- */
@@ -294,13 +295,11 @@
                 globe.classList.add('clean');
                 cleanBtn.textContent = "UNDO (MAKE DIRTY)";
                 cleanBtn.style.backgroundColor = "var(--text-color)";
-                document.body.style.backgroundColor = "#FFF";
                 globeSection.scrollIntoView({ behavior: 'smooth' });
             } else {
                 globe.classList.remove('clean');
                 cleanBtn.textContent = "Clean The Earth";
                 cleanBtn.style.backgroundColor = "var(--accent-pink)";
-                document.body.style.backgroundColor = "var(--bg-color)";
             }
         });
 
@@ -310,7 +309,7 @@
         const section3 = document.getElementById('game-sec');
 
         let particles = [];
-        let mouse = { x: -1000, y: -1000 }; // Start offscreen
+        let mouse = { x: -1000, y: -1000 }; 
         const colors = ['#FF0055', '#363636', '#111111', '#5c4a3d', '#FFF'];
 
         function resizeCanvas() {
@@ -321,7 +320,6 @@
 
         window.addEventListener('resize', resizeCanvas);
 
-        // Track mouse position relative to canvas
         canvas.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
             mouse.x = e.clientX - rect.left;
@@ -334,53 +332,58 @@
         });
 
         class Litter {
-            constructor(x, y) {
+            constructor(x, surfaceY) {
                 this.x = x;
-                this.y = y;
+                this.size = Math.random() * 20 + 10;
+                this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+                
+                // Ensure spawn position is strictly on or above the line
+                let yOffset = this.shape === 'rect' ? this.size : this.size / 2;
+                this.y = surfaceY - yOffset - (Math.random() * 40);
+                
                 this.vx = 0;
                 this.vy = 0;
-                this.size = Math.random() * 20 + 10;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.opacity = 1;
                 this.active = true;
-                this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
             }
 
             update() {
                 if (!this.active) return;
+                
+                const surfaceY = canvas.height / 1.5;
 
-                // Fluid mechanics math: distance to mouse broom
                 let dx = this.x - mouse.x;
                 let dy = this.y - mouse.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
                 
-                // Radius of effect
                 const sweepRadius = 120;
 
                 if (dist < sweepRadius) {
-                    // Force gets stronger closer to the broom
                     let force = (sweepRadius - dist) / sweepRadius;
                     
-                    // Add a swirl factor to mimic fluid displacement
                     let swirlX = -dy * 0.08;
                     let swirlY = dx * 0.08;
                     
-                    // Repel logic
                     this.vx += (dx / dist) * force * 3 + swirlX;
                     this.vy += (dy / dist) * force * 3 + swirlY;
                     
-                    // Fade out as it gets "swept"
                     this.opacity -= 0.015;
                 }
 
-                // Fluid viscosity (damping friction)
                 this.vx *= 0.88;
                 this.vy *= 0.88;
 
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Deactivate if fully faded
+                // FLOOR COLLISION: Prevent litter from sinking below the black line
+                let bottomEdge = this.shape === 'rect' ? this.y + this.size : this.y + (this.size / 2);
+                if (bottomEdge > surfaceY) {
+                    this.y = this.shape === 'rect' ? surfaceY - this.size : surfaceY - (this.size / 2);
+                    this.vy = 0; // Stop downward vertical movement completely
+                }
+
                 if (this.opacity <= 0) {
                     this.active = false;
                 }
@@ -408,18 +411,14 @@
 
         function initParticles() {
             particles = [];
-            // Generate litter mostly sitting on the "surface line"
             const surfaceY = canvas.height / 1.5;
             for (let i = 0; i < 150; i++) {
-                // Scatter them horizontally, tightly packed vertically around the line
                 let x = Math.random() * canvas.width;
-                let y = surfaceY - (Math.random() * 60) + (Math.random() * 20);
-                particles.push(new Litter(x, y));
+                particles.push(new Litter(x, surfaceY));
             }
         }
 
         function drawBroom() {
-            // Draw a brutalist broom at cursor position
             ctx.fillStyle = '#FFD700';
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 4;
@@ -445,18 +444,15 @@
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw the plain surface black line
             const surfaceY = canvas.height / 1.5;
             ctx.fillStyle = '#000';
             ctx.fillRect(0, surfaceY, canvas.width, 12);
 
-            // Update and draw particles
             for (let p of particles) {
                 p.update();
                 p.draw();
             }
 
-            // Draw Broom if mouse is on canvas
             if (mouse.x !== -1000) {
                 drawBroom();
             }
@@ -464,7 +460,6 @@
             requestAnimationFrame(animate);
         }
 
-        // Initialize game
         resizeCanvas();
         animate();
 
