@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Earth | Green Earth</title>
+    <style>
+        /* --- NEOBRUTALIST VARIABLES & RESET --- */
+        :root {
+            --bg-color: #D6E4E5; /* Grungy off-white */
+            --text-color: #111111;
+            --accent-green: #00FF66;
+            --accent-pink: #FF0055;
+            --border-thick: 6px solid #000;
+            --shadow-hard: 8px 8px 0px #000;
+            
+            /* Dirty Earth Colors */
+            --ocean-dirty: #5c4a3d;
+            --land-dirty1: #363636;
+            --land-dirty2: #4a4238;
+            
+            /* Clean Earth Colors */
+            --ocean-clean: #0077FF;
+            --land-clean1: #00FF66;
+            --land-clean2: #00CC52;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace; /* Brutalist system font */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 600;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        /* --- LAYOUT --- */
+        header {
+            padding: 20px 40px;
+            border-bottom: var(--border-thick);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FFF;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--accent-green);
+            padding: 5px 15px;
+            border: var(--border-thick);
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            gap: 60px;
+        }
+
+        .content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        /* --- BUTTONS --- */
+        button {
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 15px 30px;
+            background-color: var(--accent-pink);
+            color: #FFF;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+        }
+
+        button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 10px 10px 0px #000;
+        }
+
+        button:active {
+            transform: translate(6px, 6px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        /* --- GLOBE (THE ROTATING EARTH) --- */
+        .visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .globe {
+            width: clamp(250px, 40vw, 400px);
+            height: clamp(250px, 40vw, 400px);
+            border-radius: 50%;
+            border: 8px solid #000;
+            box-shadow: var(--shadow-hard), inset -20px -20px 0px rgba(0,0,0,0.3);
+            
+            /* Initial Dirty State using repeating radial gradients to simulate continents */
+            background-color: var(--ocean-dirty);
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--land-dirty1) 15%, transparent 25%),
+                radial-gradient(circle at 70% 60%, var(--land-dirty2) 20%, transparent 35%),
+                radial-gradient(circle at 40% 80%, var(--land-dirty1) 15%, transparent 20%),
+                radial-gradient(circle at 80% 20%, var(--land-dirty2) 10%, transparent 15%);
+            background-size: 200% 100%;
+            
+            animation: spin 8s linear infinite;
+            transition: background-color 1.5s ease, background-image 1.5s ease;
+        }
+
+        /* Clean State Class added via JS */
+        .globe.clean {
+            background-color: var(--ocean-clean);
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--land-clean1) 15%, transparent 25%),
+                radial-gradient(circle at 70% 60%, var(--land-clean2) 20%, transparent 35%),
+                radial-gradient(circle at 40% 80%, var(--land-clean1) 15%, transparent 20%),
+                radial-gradient(circle at 80% 20%, var(--land-clean2) 10%, transparent 15%);
+        }
+
+        @keyframes spin {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 900px) {
+            main {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+            .content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">INITIATIVE</div>
+        <div style="font-weight: 900;">2026</div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1>Clean Earth.<br>Green Earth.</h1>
+            <p>Our home is choking on waste. The colors are fading. Stop waiting for someone else to fix it. It's time to scrub our planet clean.</p>
+            <button id="cleanActionBtn">Clean The Earth</button>
+        </div>
+        
+        <div class="visual">
+            <!-- The rotating, initially dirty earth -->
+            <div class="globe" id="earthGlobe"></div>
+        </div>
+    </main>
+
+    <script>
+        // Interactivity: Toggle the Earth's state and Button text
+        const cleanBtn = document.getElementById('cleanActionBtn');
+        const globe = document.getElementById('earthGlobe');
+        let isClean = false;
+
+        cleanBtn.addEventListener('click', () => {
+            isClean = !isClean;
+            
+            if (isClean) {
+                // Apply clean styles
+                globe.classList.add('clean');
+                cleanBtn.textContent = "UNDO (MAKE DIRTY)";
+                cleanBtn.style.backgroundColor = "var(--text-color)";
+                document.body.style.backgroundColor = "#FFF";
+            } else {
+                // Revert to dirty styles
+                globe.classList.remove('clean');
+                cleanBtn.textContent = "Clean The Earth";
+                cleanBtn.style.backgroundColor = "var(--accent-pink)";
+                document.body.style.backgroundColor = "var(--bg-color)";
+            }
+        });
+    </script>
+
+</body>
+</html>
