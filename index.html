@@ -33,9 +33,7 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        html {
-            scroll-behavior: smooth; 
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             background-color: var(--bg-color);
@@ -44,7 +42,6 @@
             transition: background-color 1s ease;
         }
 
-        /* --- SCALED TYPOGRAPHY (67% of original) --- */
         h1 {
             font-size: clamp(2.3rem, 6.7vw, 5.3rem); 
             font-weight: 900;
@@ -70,7 +67,7 @@
             margin-bottom: 40px;
         }
 
-        /* --- LAYOUT / SECTIONS --- */
+        /* --- HEADER --- */
         header {
             position: fixed;
             top: 0;
@@ -93,6 +90,84 @@
             box-shadow: 4px 4px 0px #000;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* --- HAMBURGER MENU --- */
+        .hamburger-btn {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px;
+            border: 3px solid #000;
+            background: #fff;
+            box-shadow: 3px 3px 0px #000;
+            transition: all 0.1s;
+        }
+
+        .hamburger-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px #000;
+        }
+
+        .hamburger-btn span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: #000;
+            transition: all 0.3s;
+        }
+
+        /* Dropdown Nav */
+        .nav-dropdown {
+            position: fixed;
+            top: 70px;
+            right: 0;
+            width: 280px;
+            background: #fff;
+            border-left: var(--border-thick);
+            border-bottom: var(--border-thick);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+        }
+
+        .nav-dropdown.open {
+            display: flex;
+        }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 16px 24px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111;
+            border-bottom: 3px solid #000;
+            letter-spacing: 1px;
+            transition: background 0.1s;
+        }
+
+        .nav-dropdown a:hover {
+            background: var(--accent-green);
+        }
+
+        .nav-dropdown a .nav-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #888;
+            display: block;
+            letter-spacing: 0;
+            text-transform: none;
+            margin-top: 2px;
+        }
+
+        /* --- LAYOUT / SECTIONS --- */
         section {
             min-height: 100vh; 
             display: flex;
@@ -104,13 +179,16 @@
             position: relative;
         }
 
-        /* Fixed Section 1 to be white */
         #hero-sec { background-color: transparent; }
         #globe-sec { background-color: #FFF; }
         #game-sec { 
             background-color: var(--accent-yellow); 
             padding: 0; 
             overflow: hidden;
+        }
+        #sort-sec {
+            background-color: #D6E4E5;
+            min-height: 100vh;
         }
         #marquee-sec { background-color: var(--text-color); color: #FFF; overflow: hidden; min-height: 30vh;}
         #cta-sec { background-color: #FFF; }
@@ -139,7 +217,7 @@
             box-shadow: 0px 0px 0px #000;
         }
 
-        /* --- GLOBE (SECTION 2) --- */
+        /* --- GLOBE --- */
         .globe-container {
             position: relative;
             width: clamp(250px, 40vw, 400px);
@@ -188,7 +266,7 @@
             100% { background-position: 200% center; }
         }
 
-        /* --- GAME (SECTION 3) --- */
+        /* --- SWEEP GAME --- */
         #sweepCanvas {
             display: block;
             width: 100%;
@@ -203,7 +281,180 @@
             pointer-events: none; 
         }
 
-        /* --- MARQUEE (SECTION 4) --- */
+        /* --- GARBAGE SORT GAME --- */
+        #sort-sec h2 { text-align: center; }
+
+        .sort-game-area {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+        }
+
+        .sort-score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sort-score {
+            font-size: 1.1rem;
+            font-weight: 900;
+            background: #fff;
+            border: 4px solid #000;
+            padding: 8px 18px;
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .sort-progress {
+            height: 18px;
+            background: #fff;
+            border: 4px solid #000;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .sort-progress-fill {
+            height: 100%;
+            background: var(--accent-green);
+            transition: width 0.3s;
+        }
+
+        .sort-bins-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .sort-bin {
+            flex: 1;
+            min-height: 160px;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 14px 10px 10px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            user-select: none;
+        }
+
+        .sort-bin:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 12px 12px 0 #000;
+        }
+
+        .sort-bin:active {
+            transform: translate(4px, 4px);
+            box-shadow: 3px 3px 0 #000;
+        }
+
+        .sort-bin.wet { background: #0077FF; }
+        .sort-bin.dry { background: var(--accent-yellow); }
+
+        .sort-bin-label {
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #000;
+        }
+
+        .sort-bin-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .bin-flash {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .bin-flash.correct { background: rgba(0,255,102,0.5); opacity: 1; }
+        .bin-flash.wrong   { background: rgba(255,0,85,0.5);  opacity: 1; }
+
+        .sort-pile {
+            flex: 1.3;
+            min-height: 160px;
+            background: #fff;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px;
+        }
+
+        .trash-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trash-item-icon {
+            font-size: 2.8rem;
+            animation: wobble 1.2s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0%,100% { transform: rotate(-5deg); }
+            50%      { transform: rotate(5deg); }
+        }
+
+        .trash-item-name {
+            font-size: 0.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sort-empty {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .sort-feedback {
+            margin-top: 16px;
+            min-height: 40px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sort-feedback.correct { color: #007733; }
+        .sort-feedback.wrong   { color: var(--accent-pink); }
+
+        .sort-result {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .sort-result h3 {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        /* --- MARQUEE --- */
         .marquee-wrapper {
             width: 100%;
             white-space: nowrap;
@@ -229,6 +480,8 @@
         @media (max-width: 768px) {
             header { padding: 15px 20px; }
             section { padding: 80px 20px 40px; }
+            .sort-bins-row { flex-direction: column; align-items: center; }
+            .sort-bin, .sort-pile { width: 100%; flex: unset; }
         }
     </style>
 </head>
@@ -236,17 +489,35 @@
 
     <header>
         <div class="logo">INITIATIVE</div>
-        <div style="font-weight: 900;">2026</div>
+        <div class="header-right">
+            <div style="font-weight: 900;">2026</div>
+            <!-- HAMBURGER -->
+            <div class="hamburger-btn" id="hamburgerBtn" title="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </header>
 
-    <!-- SECTION 1: Centered Hero Text -->
+    <!-- NAV DROPDOWN -->
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="#">Articles <span class="nav-tag">Read our latest pieces on environment</span></a>
+        <a href="#">Initiative <span class="nav-tag">What we stand for & our mission</span></a>
+        <a href="#">Steps You Can Take <span class="nav-tag">Personal actions for real change</span></a>
+        <a href="#">Games <span class="nav-tag">Learn while you play</span></a>
+        <a href="#">Contact Us <span class="nav-tag">Reach out to the team</span></a>
+        <a href="#">Our People <span class="nav-tag">The humans behind this</span></a>
+    </nav>
+
+    <!-- SECTION 1: Hero -->
     <section id="hero-sec">
         <h1>Clean Earth.<br>Green Earth.</h1>
         <p>Our home is choking on waste. The colors are fading. Stop waiting for someone else to fix it. It's time to scrub our planet clean.</p>
         <button id="cleanActionBtn">Clean The Earth</button>
     </section>
 
-    <!-- SECTION 2: The Textured Globe -->
+    <!-- SECTION 2: Globe -->
     <section id="globe-sec">
         <h2>The Patient</h2>
         <div class="globe-container">
@@ -256,7 +527,7 @@
         </div>
     </section>
 
-    <!-- SECTION 3: The Broom Fluid Game -->
+    <!-- SECTION 3: Sweep Game -->
     <section id="game-sec">
         <div class="game-overlay">
             <h2>Clean The Surface</h2>
@@ -265,7 +536,58 @@
         <canvas id="sweepCanvas"></canvas>
     </section>
 
-    <!-- SECTION 4: Scrolling Marquee -->
+    <!-- SECTION 4: Garbage Sort Game -->
+    <section id="sort-sec">
+        <h2 style="margin-bottom: 10px;">Sort The Garbage</h2>
+        <p style="margin-bottom: 28px;">Pick up each item and toss it into the right bin — WET or DRY.</p>
+
+        <div class="sort-game-area">
+            <div class="sort-score-bar">
+                <div class="sort-score">Score: <span id="sortScore">0</span></div>
+                <div class="sort-progress"><div class="sort-progress-fill" id="sortProgress" style="width:0%"></div></div>
+                <div class="sort-score">Left: <span id="sortLeft">10</span></div>
+            </div>
+
+            <!-- ACTIVE GAME -->
+            <div id="sortActiveArea">
+                <div class="sort-bins-row">
+                    <!-- WET BIN -->
+                    <div class="sort-bin wet" id="binWet" onclick="sortDrop('wet')">
+                        <div class="bin-flash" id="flashWet"></div>
+                        <div class="sort-bin-icon">🪣</div>
+                        <div class="sort-bin-label">WET</div>
+                    </div>
+
+                    <!-- MIDDLE PILE -->
+                    <div class="sort-pile" id="sortPile">
+                        <div class="trash-item" id="currentTrashDisplay">
+                            <div class="trash-item-icon" id="trashIcon">🍌</div>
+                            <div class="trash-item-name" id="trashName">Banana Peel</div>
+                        </div>
+                    </div>
+
+                    <!-- DRY BIN -->
+                    <div class="sort-bin dry" id="binDry" onclick="sortDrop('dry')">
+                        <div class="bin-flash" id="flashDry"></div>
+                        <div class="sort-bin-icon">🗑️</div>
+                        <div class="sort-bin-label">DRY</div>
+                    </div>
+                </div>
+
+                <div class="sort-feedback" id="sortFeedback"></div>
+            </div>
+
+            <!-- RESULT SCREEN -->
+            <div class="sort-result" id="sortResult">
+                <div style="font-size:4rem" id="resultEmoji">🏆</div>
+                <h3 id="resultTitle">Game Over!</h3>
+                <p id="resultMsg" style="max-width:400px; text-align:center;"></p>
+                <button onclick="resetSortGame()" style="background: var(--accent-green); color:#000; margin-top:10px;">Play Again</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: Marquee -->
     <section id="marquee-sec">
         <div class="marquee-wrapper">
             <div class="marquee">
@@ -274,23 +596,34 @@
         </div>
     </section>
 
-    <!-- SECTION 5: Final Call to Action -->
+    <!-- SECTION 6: Final CTA -->
     <section id="cta-sec">
         <h1>Ready to work?</h1>
         <p>The transition from dirty to clean doesn't happen with a click of a button in real life. It requires action.</p>
-        <button style="background-color: var(--text-color); color: var(--accent-green);">JOIN THE MOVEMENT</button>
+        <button onclick="window.location.href='join.html'" style="background-color: var(--text-color); color: var(--accent-green);">JOIN THE MOVEMENT</button>
     </section>
 
     <script>
-        // --- BUTTON INTERACTIVITY ---
-        const cleanBtn = document.getElementById('cleanActionBtn');
-        const globe = document.getElementById('earthGlobe');
+        // --- HAMBURGER MENU ---
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navDropdown  = document.getElementById('navDropdown');
+
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => navDropdown.classList.remove('open'));
+        navDropdown.addEventListener('click', e => e.stopPropagation());
+
+        // --- GLOBE BUTTON ---
+        const cleanBtn   = document.getElementById('cleanActionBtn');
+        const globe      = document.getElementById('earthGlobe');
         const globeSection = document.getElementById('globe-sec');
         let isClean = false;
 
         cleanBtn.addEventListener('click', () => {
             isClean = !isClean;
-            
             if (isClean) {
                 globe.classList.add('clean');
                 cleanBtn.textContent = "UNDO (MAKE DIRTY)";
@@ -303,9 +636,9 @@
             }
         });
 
-        // --- FLUID BROOM GAME LOGIC ---
-        const canvas = document.getElementById('sweepCanvas');
-        const ctx = canvas.getContext('2d');
+        // --- SWEEP GAME ---
+        const canvas   = document.getElementById('sweepCanvas');
+        const ctx      = canvas.getContext('2d');
         const section3 = document.getElementById('game-sec');
 
         let particles = [];
@@ -313,7 +646,7 @@
         const colors = ['#FF0055', '#363636', '#111111', '#5c4a3d', '#FFF'];
 
         function resizeCanvas() {
-            canvas.width = section3.clientWidth;
+            canvas.width  = section3.clientWidth;
             canvas.height = section3.clientHeight;
             initParticles();
         }
@@ -336,11 +669,8 @@
                 this.x = x;
                 this.size = Math.random() * 20 + 10;
                 this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
-                
-                // Ensure spawn position is strictly on or above the line
                 let yOffset = this.shape === 'rect' ? this.size : this.size / 2;
                 this.y = surfaceY - yOffset - (Math.random() * 40);
-                
                 this.vx = 0;
                 this.vy = 0;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -350,53 +680,37 @@
 
             update() {
                 if (!this.active) return;
-                
                 const surfaceY = canvas.height / 1.5;
-
                 let dx = this.x - mouse.x;
                 let dy = this.y - mouse.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
-                
                 const sweepRadius = 120;
-
                 if (dist < sweepRadius) {
                     let force = (sweepRadius - dist) / sweepRadius;
-                    
                     let swirlX = -dy * 0.08;
-                    let swirlY = dx * 0.08;
-                    
+                    let swirlY =  dx * 0.08;
                     this.vx += (dx / dist) * force * 3 + swirlX;
                     this.vy += (dy / dist) * force * 3 + swirlY;
-                    
                     this.opacity -= 0.015;
                 }
-
                 this.vx *= 0.88;
                 this.vy *= 0.88;
-
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // FLOOR COLLISION: Prevent litter from sinking below the black line
+                this.x  += this.vx;
+                this.y  += this.vy;
                 let bottomEdge = this.shape === 'rect' ? this.y + this.size : this.y + (this.size / 2);
                 if (bottomEdge > surfaceY) {
-                    this.y = this.shape === 'rect' ? surfaceY - this.size : surfaceY - (this.size / 2);
-                    this.vy = 0; // Stop downward vertical movement completely
+                    this.y  = this.shape === 'rect' ? surfaceY - this.size : surfaceY - (this.size / 2);
+                    this.vy = 0;
                 }
-
-                if (this.opacity <= 0) {
-                    this.active = false;
-                }
+                if (this.opacity <= 0) this.active = false;
             }
 
             draw() {
                 if (!this.active) return;
-                
                 ctx.globalAlpha = this.opacity;
-                ctx.fillStyle = this.color;
+                ctx.fillStyle   = this.color;
                 ctx.strokeStyle = '#000';
-                ctx.lineWidth = 3;
-
+                ctx.lineWidth   = 3;
                 ctx.beginPath();
                 if (this.shape === 'rect') {
                     ctx.rect(this.x, this.y, this.size, this.size);
@@ -413,55 +727,163 @@
             particles = [];
             const surfaceY = canvas.height / 1.5;
             for (let i = 0; i < 150; i++) {
-                let x = Math.random() * canvas.width;
-                particles.push(new Litter(x, surfaceY));
+                particles.push(new Litter(Math.random() * canvas.width, surfaceY));
             }
         }
 
         function drawBroom() {
-            ctx.fillStyle = '#FFD700';
+            ctx.fillStyle   = '#FFD700';
             ctx.strokeStyle = '#000';
-            ctx.lineWidth = 4;
-
-            // Handle
+            ctx.lineWidth   = 4;
             ctx.beginPath();
             ctx.rect(mouse.x + 10, mouse.y - 40, 8, 50);
-            ctx.fill();
-            ctx.stroke();
-
-            // Bristles (Base)
+            ctx.fill(); ctx.stroke();
             ctx.fillStyle = '#FF0055';
             ctx.beginPath();
             ctx.moveTo(mouse.x - 15, mouse.y + 20);
             ctx.lineTo(mouse.x + 40, mouse.y + 20);
             ctx.lineTo(mouse.x + 25, mouse.y - 5);
-            ctx.lineTo(mouse.x, mouse.y - 5);
+            ctx.lineTo(mouse.x,      mouse.y - 5);
             ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+            ctx.fill(); ctx.stroke();
         }
 
-        function animate() {
+        function animateSweep() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             const surfaceY = canvas.height / 1.5;
             ctx.fillStyle = '#000';
             ctx.fillRect(0, surfaceY, canvas.width, 12);
-
-            for (let p of particles) {
-                p.update();
-                p.draw();
-            }
-
-            if (mouse.x !== -1000) {
-                drawBroom();
-            }
-
-            requestAnimationFrame(animate);
+            for (let p of particles) { p.update(); p.draw(); }
+            if (mouse.x !== -1000) drawBroom();
+            requestAnimationFrame(animateSweep);
         }
 
         resizeCanvas();
-        animate();
+        animateSweep();
+
+        // =====================================================
+        // --- GARBAGE SORT GAME ---
+        // =====================================================
+        const TRASH_ITEMS = [
+            { icon: '🍌', name: 'Banana Peel',    type: 'wet' },
+            { icon: '🥬', name: 'Veggie Scraps',  type: 'wet' },
+            { icon: '☕', name: 'Coffee Grounds',  type: 'wet' },
+            { icon: '🍊', name: 'Orange Peel',    type: 'wet' },
+            { icon: '🥚', name: 'Eggshell',       type: 'wet' },
+            { icon: '📰', name: 'Newspaper',      type: 'dry' },
+            { icon: '🧴', name: 'Plastic Bottle', type: 'dry' },
+            { icon: '📦', name: 'Cardboard Box',  type: 'dry' },
+            { icon: '🥫', name: 'Tin Can',        type: 'dry' },
+            { icon: '💡', name: 'Old Bulb',       type: 'dry' },
+        ];
+
+        const CORRECT_MSGS = [
+            '✅ Correct! Planet thanks you.',
+            '✅ Nailed it! That\'s the right bin.',
+            '✅ Yes! One less piece of wrongly sorted trash.',
+            '✅ Perfect sort!',
+        ];
+        const WRONG_MSGS = [
+            '❌ Oops! Wrong bin.',
+            '❌ Not quite — try the other bin!',
+            '❌ Wrong! Think again next time.',
+        ];
+
+        let sortQueue = [];
+        let sortScoreVal = 0;
+        let sortTotal   = 10;
+        let sortDone    = 0;
+
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function resetSortGame() {
+            sortScoreVal = 0;
+            sortDone     = 0;
+            sortQueue    = shuffleArray(TRASH_ITEMS);
+            document.getElementById('sortScore').textContent    = 0;
+            document.getElementById('sortLeft').textContent     = sortTotal;
+            document.getElementById('sortProgress').style.width = '0%';
+            document.getElementById('sortFeedback').textContent = '';
+            document.getElementById('sortFeedback').className   = 'sort-feedback';
+            document.getElementById('sortResult').style.display = 'none';
+            document.getElementById('sortActiveArea').style.display = 'block';
+            showNextTrash();
+        }
+
+        function showNextTrash() {
+            if (sortQueue.length === 0) {
+                endSortGame(); return;
+            }
+            const item = sortQueue[0];
+            document.getElementById('trashIcon').textContent = item.icon;
+            document.getElementById('trashName').textContent = item.name;
+            document.getElementById('sortFeedback').textContent = '';
+            document.getElementById('sortFeedback').className   = 'sort-feedback';
+        }
+
+        function sortDrop(bin) {
+            if (sortQueue.length === 0) return;
+
+            const item   = sortQueue.shift();
+            const flashEl = bin === 'wet' ? document.getElementById('flashWet') : document.getElementById('flashDry');
+            const feedEl  = document.getElementById('sortFeedback');
+
+            sortDone++;
+            document.getElementById('sortLeft').textContent = sortTotal - sortDone;
+            document.getElementById('sortProgress').style.width = ((sortDone / sortTotal) * 100) + '%';
+
+            if (item.type === bin) {
+                sortScoreVal++;
+                document.getElementById('sortScore').textContent = sortScoreVal;
+                feedEl.textContent = CORRECT_MSGS[Math.floor(Math.random() * CORRECT_MSGS.length)];
+                feedEl.className   = 'sort-feedback correct';
+                flashEl.className  = 'bin-flash correct';
+            } else {
+                feedEl.textContent = WRONG_MSGS[Math.floor(Math.random() * WRONG_MSGS.length)];
+                feedEl.className   = 'sort-feedback wrong';
+                flashEl.className  = 'bin-flash wrong';
+            }
+
+            setTimeout(() => { flashEl.className = 'bin-flash'; }, 300);
+            setTimeout(() => { showNextTrash(); }, 600);
+        }
+
+        function endSortGame() {
+            document.getElementById('sortActiveArea').style.display = 'none';
+            const resultEl = document.getElementById('sortResult');
+            resultEl.style.display = 'flex';
+
+            const pct = sortScoreVal / sortTotal;
+            let emoji, title, msg;
+
+            if (pct === 1) {
+                emoji = '🏆'; title = 'Perfect Score!';
+                msg = `${sortScoreVal}/${sortTotal} — You're a waste warrior. Zero errors. The planet needed exactly this kind of human.`;
+            } else if (pct >= 0.7) {
+                emoji = '🌿'; title = 'Great Sorting!';
+                msg = `${sortScoreVal}/${sortTotal} — Solid effort. A few slips, but you clearly know your waste. Keep going.`;
+            } else if (pct >= 0.4) {
+                emoji = '♻️'; title = 'Getting There.';
+                msg = `${sortScoreVal}/${sortTotal} — Not bad, but the Earth needs better. Review wet vs dry waste and try again.`;
+            } else {
+                emoji = '🗑️'; title = 'Needs Work.';
+                msg = `${sortScoreVal}/${sortTotal} — The landfill thanks you. But the planet doesn't. Learn the basics and try again.`;
+            }
+
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultTitle').textContent  = title;
+            document.getElementById('resultMsg').textContent    = msg;
+        }
+
+        // Init on load
+        resetSortGame();
 
     </script>
 </body>
