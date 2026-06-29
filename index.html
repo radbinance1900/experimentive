@@ -7,7 +7,7 @@
     <style>
         /* --- NEOBRUTALIST VARIABLES & RESET --- */
         :root {
-            --bg-color: #D6E4E5; /* Grungy off-white */
+            --bg-color: #D6E4E5; 
             --text-color: #111111;
             --accent-green: #00FF66;
             --accent-pink: #FF0055;
@@ -34,7 +34,7 @@
         }
 
         html {
-            scroll-behavior: smooth; /* Smooth scrolling for the button click */
+            scroll-behavior: smooth; 
         }
 
         body {
@@ -44,28 +44,28 @@
             transition: background-color 1s ease;
         }
 
-        /* --- TYPOGRAPHY --- */
+        /* --- SCALED TYPOGRAPHY (67% of original) --- */
         h1 {
-            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-size: clamp(2.3rem, 6.7vw, 5.3rem); /* Scaled down */
             font-weight: 900;
             text-transform: uppercase;
             line-height: 0.9;
-            letter-spacing: -3px;
+            letter-spacing: -2px;
             margin-bottom: 20px;
             text-align: center;
         }
 
         h2 {
-            font-size: clamp(2rem, 6vw, 5rem);
+            font-size: clamp(1.3rem, 4vw, 3.3rem); /* Scaled down */
             text-transform: uppercase;
             font-weight: 900;
             margin-bottom: 30px;
         }
 
         p {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-size: clamp(0.8rem, 2vw, 1rem); /* Scaled down */
             font-weight: 600;
-            max-width: 700px;
+            max-width: 600px;
             text-align: center;
             margin-bottom: 40px;
         }
@@ -75,7 +75,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 20px 40px;
+            padding: 15px 30px;
             border-bottom: var(--border-thick);
             display: flex;
             justify-content: space-between;
@@ -85,7 +85,7 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 900;
             background: var(--accent-green);
             padding: 5px 15px;
@@ -94,29 +94,32 @@
         }
 
         section {
-            min-height: 100vh; /* Makes every section at least full screen */
+            min-height: 100vh; 
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 100px 40px; /* Padding for fixed header */
+            padding: 100px 40px; 
             border-bottom: var(--border-thick);
             position: relative;
         }
 
-        /* Section Specific Backgrounds */
         #hero-sec { background-color: transparent; }
         #globe-sec { background-color: #FFF; }
-        #stats-sec { background-color: var(--accent-yellow); }
-        #marquee-sec { background-color: var(--text-color); color: #FFF; overflow: hidden;}
+        #game-sec { 
+            background-color: var(--accent-yellow); 
+            padding: 0; 
+            overflow: hidden;
+        }
+        #marquee-sec { background-color: var(--text-color); color: #FFF; overflow: hidden; min-height: 30vh;}
         #cta-sec { background-color: transparent; }
 
         /* --- BUTTONS --- */
         button {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 900;
             text-transform: uppercase;
-            padding: 20px 40px;
+            padding: 15px 30px;
             background-color: var(--accent-pink);
             color: #FFF;
             border: var(--border-thick);
@@ -135,11 +138,11 @@
             box-shadow: 0px 0px 0px #000;
         }
 
-        /* --- GLOBE (THE ROTATING, TEXTURED EARTH) --- */
+        /* --- GLOBE (SECTION 2) --- */
         .globe-container {
             position: relative;
-            width: clamp(300px, 50vw, 500px);
-            height: clamp(300px, 50vw, 500px);
+            width: clamp(250px, 40vw, 400px);
+            height: clamp(250px, 40vw, 400px);
         }
 
         .globe {
@@ -150,8 +153,6 @@
             box-shadow: var(--shadow-hard), inset -30px -30px 0px rgba(0,0,0,0.4);
             overflow: hidden;
             position: relative;
-            
-            /* Initial Dirty State */
             background-color: var(--ocean-dirty);
             background-image: 
                 radial-gradient(circle at 20% 30%, var(--land-dirty1) 15%, transparent 25%),
@@ -159,22 +160,19 @@
                 radial-gradient(circle at 40% 80%, var(--land-dirty1) 15%, transparent 20%),
                 radial-gradient(circle at 80% 20%, var(--land-dirty2) 10%, transparent 15%);
             background-size: 200% 100%;
-            
             animation: spin 10s linear infinite;
             transition: background-color 1.5s ease, background-image 1.5s ease;
         }
 
-        /* The SVG texture overlay */
         .globe-texture {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             mix-blend-mode: overlay;
             opacity: 0.7;
-            pointer-events: none; /* So it doesn't block clicks */
+            pointer-events: none; 
         }
 
-        /* Clean State */
         .globe.clean {
             background-color: var(--ocean-clean);
             background-image: 
@@ -189,35 +187,19 @@
             100% { background-position: 200% center; }
         }
 
-        /* --- CARDS (SECTION 3) --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
+        /* --- GAME (SECTION 3) --- */
+        #sweepCanvas {
+            display: block;
             width: 100%;
-            max-width: 1200px;
+            height: 100%;
+            cursor: none; /* Hide default cursor to show broom */
         }
-
-        .card {
-            background: #FFF;
-            border: var(--border-thick);
-            padding: 30px;
-            box-shadow: var(--shadow-hard);
-        }
-
-        .card h3 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            background: var(--accent-pink);
-            color: white;
-            display: inline-block;
-            padding: 5px 10px;
-        }
-
-        .card p {
-            text-align: left;
-            font-size: 1.1rem;
-            margin-bottom: 0;
+        
+        .game-overlay {
+            position: absolute;
+            top: 40px;
+            text-align: center;
+            pointer-events: none; /* Let mouse interact with canvas behind text */
         }
 
         /* --- MARQUEE (SECTION 4) --- */
@@ -226,11 +208,13 @@
             white-space: nowrap;
             overflow: hidden;
             box-sizing: border-box;
+            display: flex;
+            align-items: center;
         }
 
         .marquee {
             display: inline-block;
-            font-size: clamp(4rem, 12vw, 10rem);
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
             text-transform: uppercase;
             animation: scrollText 15s linear infinite;
@@ -241,10 +225,9 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             header { padding: 15px 20px; }
-            section { padding: 100px 20px 40px; }
+            section { padding: 80px 20px 40px; }
         }
     </style>
 </head>
@@ -264,32 +247,21 @@
 
     <!-- SECTION 2: The Textured Globe -->
     <section id="globe-sec">
-        <h2 style="margin-bottom: 50px; text-align: center;">The Patient</h2>
+        <h2>The Patient</h2>
         <div class="globe-container">
             <div class="globe" id="earthGlobe">
-                <!-- SVG Noise overlay to give realistic texture -->
                 <div class="globe-texture"></div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION 3: The Problem Stats -->
-    <section id="stats-sec">
-        <h2 style="text-align: center;">The Damage</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>PLASTIC</h3>
-                <p>Oceans are turning into plastic soup. Millions of tons of waste suffocating marine life every single year.</p>
-            </div>
-            <div class="card">
-                <h3 style="background: var(--text-color);">EMISSIONS</h3>
-                <p>The air is thick with smog. Carbon levels are breaking records, trapping heat and boiling our atmosphere.</p>
-            </div>
-            <div class="card">
-                <h3 style="background: var(--accent-green); color: #000;">DEFORESTATION</h3>
-                <p>The lungs of the earth are being slashed and burned for quick profit, leaving arid dirt behind.</p>
-            </div>
+    <!-- SECTION 3: The Broom Fluid Game -->
+    <section id="game-sec">
+        <div class="game-overlay">
+            <h2>Clean The Surface</h2>
+            <p style="margin: 0 auto;">Hover your cursor to sweep the litter away.</p>
         </div>
+        <canvas id="sweepCanvas"></canvas>
     </section>
 
     <!-- SECTION 4: Scrolling Marquee -->
@@ -309,7 +281,7 @@
     </section>
 
     <script>
-        // Interactivity: Toggle the Earth's state and Scroll
+        // --- BUTTON INTERACTIVITY ---
         const cleanBtn = document.getElementById('cleanActionBtn');
         const globe = document.getElementById('earthGlobe');
         const globeSection = document.getElementById('globe-sec');
@@ -319,23 +291,183 @@
             isClean = !isClean;
             
             if (isClean) {
-                // Apply clean styles
                 globe.classList.add('clean');
                 cleanBtn.textContent = "UNDO (MAKE DIRTY)";
                 cleanBtn.style.backgroundColor = "var(--text-color)";
                 document.body.style.backgroundColor = "#FFF";
-                
-                // Automatically scroll down to Section 2 so the user sees the clean earth
                 globeSection.scrollIntoView({ behavior: 'smooth' });
             } else {
-                // Revert to dirty styles
                 globe.classList.remove('clean');
                 cleanBtn.textContent = "Clean The Earth";
                 cleanBtn.style.backgroundColor = "var(--accent-pink)";
                 document.body.style.backgroundColor = "var(--bg-color)";
             }
         });
-    </script>
 
+        // --- FLUID BROOM GAME LOGIC ---
+        const canvas = document.getElementById('sweepCanvas');
+        const ctx = canvas.getContext('2d');
+        const section3 = document.getElementById('game-sec');
+
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 }; // Start offscreen
+        const colors = ['#FF0055', '#363636', '#111111', '#5c4a3d', '#FFF'];
+
+        function resizeCanvas() {
+            canvas.width = section3.clientWidth;
+            canvas.height = section3.clientHeight;
+            initParticles();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Track mouse position relative to canvas
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        class Litter {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.size = Math.random() * 20 + 10;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = 1;
+                this.active = true;
+                this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+            }
+
+            update() {
+                if (!this.active) return;
+
+                // Fluid mechanics math: distance to mouse broom
+                let dx = this.x - mouse.x;
+                let dy = this.y - mouse.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                
+                // Radius of effect
+                const sweepRadius = 120;
+
+                if (dist < sweepRadius) {
+                    // Force gets stronger closer to the broom
+                    let force = (sweepRadius - dist) / sweepRadius;
+                    
+                    // Add a swirl factor to mimic fluid displacement
+                    let swirlX = -dy * 0.08;
+                    let swirlY = dx * 0.08;
+                    
+                    // Repel logic
+                    this.vx += (dx / dist) * force * 3 + swirlX;
+                    this.vy += (dy / dist) * force * 3 + swirlY;
+                    
+                    // Fade out as it gets "swept"
+                    this.opacity -= 0.015;
+                }
+
+                // Fluid viscosity (damping friction)
+                this.vx *= 0.88;
+                this.vy *= 0.88;
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Deactivate if fully faded
+                if (this.opacity <= 0) {
+                    this.active = false;
+                }
+            }
+
+            draw() {
+                if (!this.active) return;
+                
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 3;
+
+                ctx.beginPath();
+                if (this.shape === 'rect') {
+                    ctx.rect(this.x, this.y, this.size, this.size);
+                } else {
+                    ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+                }
+                ctx.fill();
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            // Generate litter mostly sitting on the "surface line"
+            const surfaceY = canvas.height / 1.5;
+            for (let i = 0; i < 150; i++) {
+                // Scatter them horizontally, tightly packed vertically around the line
+                let x = Math.random() * canvas.width;
+                let y = surfaceY - (Math.random() * 60) + (Math.random() * 20);
+                particles.push(new Litter(x, y));
+            }
+        }
+
+        function drawBroom() {
+            // Draw a brutalist broom at cursor position
+            ctx.fillStyle = '#FFD700';
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 4;
+
+            // Handle
+            ctx.beginPath();
+            ctx.rect(mouse.x + 10, mouse.y - 40, 8, 50);
+            ctx.fill();
+            ctx.stroke();
+
+            // Bristles (Base)
+            ctx.fillStyle = '#FF0055';
+            ctx.beginPath();
+            ctx.moveTo(mouse.x - 15, mouse.y + 20);
+            ctx.lineTo(mouse.x + 40, mouse.y + 20);
+            ctx.lineTo(mouse.x + 25, mouse.y - 5);
+            ctx.lineTo(mouse.x, mouse.y - 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the plain surface black line
+            const surfaceY = canvas.height / 1.5;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, surfaceY, canvas.width, 12);
+
+            // Update and draw particles
+            for (let p of particles) {
+                p.update();
+                p.draw();
+            }
+
+            // Draw Broom if mouse is on canvas
+            if (mouse.x !== -1000) {
+                drawBroom();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize game
+        resizeCanvas();
+        animate();
+
+    </script>
 </body>
 </html>
