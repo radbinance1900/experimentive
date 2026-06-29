@@ -11,6 +11,7 @@
             --text-color: #111111;
             --accent-green: #00FF66;
             --accent-pink: #FF0055;
+            --accent-yellow: #FFD700;
             --border-thick: 6px solid #000;
             --shadow-hard: 8px 8px 0px #000;
             
@@ -29,43 +30,58 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace; /* Brutalist system font */
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Smooth scrolling for the button click */
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             overflow-x: hidden;
+            transition: background-color 1s ease;
         }
 
         /* --- TYPOGRAPHY --- */
         h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(3.5rem, 10vw, 8rem);
             font-weight: 900;
             text-transform: uppercase;
-            line-height: 1;
-            letter-spacing: -2px;
+            line-height: 0.9;
+            letter-spacing: -3px;
             margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 6vw, 5rem);
+            text-transform: uppercase;
+            font-weight: 900;
+            margin-bottom: 30px;
         }
 
         p {
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             font-weight: 600;
-            max-width: 600px;
+            max-width: 700px;
+            text-align: center;
             margin-bottom: 40px;
         }
 
-        /* --- LAYOUT --- */
+        /* --- LAYOUT / SECTIONS --- */
         header {
+            position: fixed;
+            top: 0;
+            width: 100%;
             padding: 20px 40px;
             border-bottom: var(--border-thick);
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #FFF;
+            z-index: 100;
         }
 
         .logo {
@@ -77,27 +93,30 @@
             box-shadow: 4px 4px 0px #000;
         }
 
-        main {
-            flex: 1;
+        section {
+            min-height: 100vh; /* Makes every section at least full screen */
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            padding: 40px;
-            gap: 60px;
+            align-items: center;
+            padding: 100px 40px; /* Padding for fixed header */
+            border-bottom: var(--border-thick);
+            position: relative;
         }
 
-        .content {
-            flex: 1;
-            max-width: 600px;
-        }
+        /* Section Specific Backgrounds */
+        #hero-sec { background-color: transparent; }
+        #globe-sec { background-color: #FFF; }
+        #stats-sec { background-color: var(--accent-yellow); }
+        #marquee-sec { background-color: var(--text-color); color: #FFF; overflow: hidden;}
+        #cta-sec { background-color: transparent; }
 
         /* --- BUTTONS --- */
         button {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
-            padding: 15px 30px;
+            padding: 20px 40px;
             background-color: var(--accent-pink);
             color: #FFF;
             border: var(--border-thick);
@@ -108,30 +127,31 @@
 
         button:hover {
             transform: translate(-2px, -2px);
-            box-shadow: 10px 10px 0px #000;
+            box-shadow: 12px 12px 0px #000;
         }
 
         button:active {
-            transform: translate(6px, 6px);
-            box-shadow: 2px 2px 0px #000;
+            transform: translate(8px, 8px);
+            box-shadow: 0px 0px 0px #000;
         }
 
-        /* --- GLOBE (THE ROTATING EARTH) --- */
-        .visual {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* --- GLOBE (THE ROTATING, TEXTURED EARTH) --- */
+        .globe-container {
+            position: relative;
+            width: clamp(300px, 50vw, 500px);
+            height: clamp(300px, 50vw, 500px);
         }
 
         .globe {
-            width: clamp(250px, 40vw, 400px);
-            height: clamp(250px, 40vw, 400px);
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 8px solid #000;
-            box-shadow: var(--shadow-hard), inset -20px -20px 0px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-hard), inset -30px -30px 0px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
             
-            /* Initial Dirty State using repeating radial gradients to simulate continents */
+            /* Initial Dirty State */
             background-color: var(--ocean-dirty);
             background-image: 
                 radial-gradient(circle at 20% 30%, var(--land-dirty1) 15%, transparent 25%),
@@ -140,11 +160,21 @@
                 radial-gradient(circle at 80% 20%, var(--land-dirty2) 10%, transparent 15%);
             background-size: 200% 100%;
             
-            animation: spin 8s linear infinite;
+            animation: spin 10s linear infinite;
             transition: background-color 1.5s ease, background-image 1.5s ease;
         }
 
-        /* Clean State Class added via JS */
+        /* The SVG texture overlay */
+        .globe-texture {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+            opacity: 0.7;
+            pointer-events: none; /* So it doesn't block clicks */
+        }
+
+        /* Clean State */
         .globe.clean {
             background-color: var(--ocean-clean);
             background-image: 
@@ -159,17 +189,62 @@
             100% { background-position: 200% center; }
         }
 
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 900px) {
-            main {
-                flex-direction: column-reverse;
-                text-align: center;
-            }
-            .content {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
+        /* --- CARDS (SECTION 3) --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .card {
+            background: #FFF;
+            border: var(--border-thick);
+            padding: 30px;
+            box-shadow: var(--shadow-hard);
+        }
+
+        .card h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            background: var(--accent-pink);
+            color: white;
+            display: inline-block;
+            padding: 5px 10px;
+        }
+
+        .card p {
+            text-align: left;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        /* --- MARQUEE (SECTION 4) --- */
+        .marquee-wrapper {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .marquee {
+            display: inline-block;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            animation: scrollText 15s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            section { padding: 100px 20px 40px; }
         }
     </style>
 </head>
@@ -180,23 +255,64 @@
         <div style="font-weight: 900;">2026</div>
     </header>
 
-    <main>
-        <div class="content">
-            <h1>Clean Earth.<br>Green Earth.</h1>
-            <p>Our home is choking on waste. The colors are fading. Stop waiting for someone else to fix it. It's time to scrub our planet clean.</p>
-            <button id="cleanActionBtn">Clean The Earth</button>
+    <!-- SECTION 1: Centered Hero Text -->
+    <section id="hero-sec">
+        <h1>Clean Earth.<br>Green Earth.</h1>
+        <p>Our home is choking on waste. The colors are fading. Stop waiting for someone else to fix it. It's time to scrub our planet clean.</p>
+        <button id="cleanActionBtn">Clean The Earth</button>
+    </section>
+
+    <!-- SECTION 2: The Textured Globe -->
+    <section id="globe-sec">
+        <h2 style="margin-bottom: 50px; text-align: center;">The Patient</h2>
+        <div class="globe-container">
+            <div class="globe" id="earthGlobe">
+                <!-- SVG Noise overlay to give realistic texture -->
+                <div class="globe-texture"></div>
+            </div>
         </div>
-        
-        <div class="visual">
-            <!-- The rotating, initially dirty earth -->
-            <div class="globe" id="earthGlobe"></div>
+    </section>
+
+    <!-- SECTION 3: The Problem Stats -->
+    <section id="stats-sec">
+        <h2 style="text-align: center;">The Damage</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>PLASTIC</h3>
+                <p>Oceans are turning into plastic soup. Millions of tons of waste suffocating marine life every single year.</p>
+            </div>
+            <div class="card">
+                <h3 style="background: var(--text-color);">EMISSIONS</h3>
+                <p>The air is thick with smog. Carbon levels are breaking records, trapping heat and boiling our atmosphere.</p>
+            </div>
+            <div class="card">
+                <h3 style="background: var(--accent-green); color: #000;">DEFORESTATION</h3>
+                <p>The lungs of the earth are being slashed and burned for quick profit, leaving arid dirt behind.</p>
+            </div>
         </div>
-    </main>
+    </section>
+
+    <!-- SECTION 4: Scrolling Marquee -->
+    <section id="marquee-sec">
+        <div class="marquee-wrapper">
+            <div class="marquee">
+                THERE IS NO PLANET B • ACT NOW • THERE IS NO PLANET B • ACT NOW • 
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: Final Call to Action -->
+    <section id="cta-sec">
+        <h1>Ready to work?</h1>
+        <p>The transition from dirty to clean doesn't happen with a click of a button in real life. It requires action.</p>
+        <button style="background-color: var(--text-color); color: var(--accent-green);">JOIN THE MOVEMENT</button>
+    </section>
 
     <script>
-        // Interactivity: Toggle the Earth's state and Button text
+        // Interactivity: Toggle the Earth's state and Scroll
         const cleanBtn = document.getElementById('cleanActionBtn');
         const globe = document.getElementById('earthGlobe');
+        const globeSection = document.getElementById('globe-sec');
         let isClean = false;
 
         cleanBtn.addEventListener('click', () => {
@@ -208,6 +324,9 @@
                 cleanBtn.textContent = "UNDO (MAKE DIRTY)";
                 cleanBtn.style.backgroundColor = "var(--text-color)";
                 document.body.style.backgroundColor = "#FFF";
+                
+                // Automatically scroll down to Section 2 so the user sees the clean earth
+                globeSection.scrollIntoView({ behavior: 'smooth' });
             } else {
                 // Revert to dirty styles
                 globe.classList.remove('clean');
