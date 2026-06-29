@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join The Movement | Clean Earth</title>
+    <style>
+        :root {
+            --accent-green: #00FF66;
+            --accent-pink: #FF0055;
+            --accent-yellow: #FFD700;
+            --border-thick: 6px solid #000;
+            --shadow-hard: 8px 8px 0px #000;
+            --text-color: #111111;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0; padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background: #D6E4E5;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 15px 30px;
+            border-bottom: var(--border-thick);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: var(--accent-green);
+            padding: 5px 15px;
+            border: var(--border-thick);
+            box-shadow: 4px 4px 0 #000;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .back-link {
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #000;
+            border: 4px solid #000;
+            padding: 6px 14px;
+            box-shadow: 4px 4px 0 #000;
+            transition: all 0.1s;
+        }
+
+        .back-link:hover {
+            transform: translate(-2px,-2px);
+            box-shadow: 7px 7px 0 #000;
+        }
+
+        /* --- HERO STRIP --- */
+        .join-hero {
+            background: var(--text-color);
+            color: var(--accent-green);
+            padding: 60px 40px 50px;
+            text-align: center;
+            border-bottom: var(--border-thick);
+        }
+
+        .join-hero h1 {
+            font-size: clamp(2rem, 7vw, 5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            margin-bottom: 18px;
+        }
+
+        .join-hero p {
+            font-size: clamp(0.85rem, 2vw, 1.05rem);
+            font-weight: 600;
+            max-width: 560px;
+            margin: 0 auto;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 40px;
+            padding: 60px 40px;
+            flex-wrap: wrap;
+        }
+
+        /* --- FORM CARD --- */
+        .form-card {
+            background: #fff;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .form-card h2 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            letter-spacing: -1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 7px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 700;
+            border: 4px solid #000;
+            background: #D6E4E5;
+            outline: none;
+            transition: box-shadow 0.1s, background 0.1s;
+        }
+
+        .form-group input:focus {
+            box-shadow: 5px 5px 0 #000;
+            background: #fff;
+        }
+
+        .form-group input.error-field {
+            border-color: var(--accent-pink);
+            background: #fff0f4;
+        }
+
+        .error-msg {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--accent-pink);
+            margin-top: 5px;
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: var(--accent-pink);
+            color: #fff;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            cursor: pointer;
+            transition: all 0.1s;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 12px 12px 0 #000;
+        }
+
+        .submit-btn:active {
+            transform: translate(8px, 8px);
+            box-shadow: 0 0 0 #000;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow-hard);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 3px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- SUCCESS STATE --- */
+        .success-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0;
+            gap: 16px;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        @keyframes popIn {
+            0%   { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .success-state h3 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #007733;
+        }
+
+        .success-state p {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #444;
+            max-width: 360px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .success-badge {
+            background: var(--accent-green);
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            padding: 10px 22px;
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- VALUES PANEL --- */
+        .values-panel {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .value-card {
+            background: #fff;
+            border: var(--border-thick);
+            box-shadow: 5px 5px 0 #000;
+            padding: 20px;
+        }
+
+        .value-card .v-icon { font-size: 1.8rem; margin-bottom: 8px; }
+
+        .value-card h4 {
+            font-size: 0.95rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .value-card p {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #444;
+            line-height: 1.5;
+            text-align: left;
+            max-width: unset;
+            margin: 0;
+        }
+
+        .value-card.green  { background: var(--accent-green); }
+        .value-card.yellow { background: var(--accent-yellow); }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: var(--border-thick);
+            background: #fff;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            main { padding: 40px 20px; }
+            .form-card { padding: 28px 22px; }
+            .values-panel { max-width: 100%; }
+            header { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">INITIATIVE</a>
+        <a href="index.html" class="back-link">← Back</a>
+    </header>
+
+    <!-- HERO -->
+    <div class="join-hero">
+        <h1>Join<br>The Movement.</h1>
+        <p>You've seen the problem. Now be part of the answer. Our community of changemakers is growing — one conscious person at a time.</p>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+
+        <!-- FORM -->
+        <div class="form-card">
+            <h2>Sign Up</h2>
+
+            <!-- FORM FIELDS -->
+            <div id="formFields">
+                <div class="form-group">
+                    <label for="userName">Your Name</label>
+                    <input type="text" id="userName" placeholder="e.g. Arjun Mehta" autocomplete="name">
+                    <div class="error-msg" id="nameError">Please enter your name.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="userEmail">Email Address</label>
+                    <input type="email" id="userEmail" placeholder="e.g. you@email.com" autocomplete="email">
+                    <div class="error-msg" id="emailError">Please enter a valid email.</div>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="handleJoin()">
+                    Join The Movement →
+                </button>
+            </div>
+
+            <!-- SUCCESS -->
+            <div class="success-state" id="successState">
+                <div class="success-icon">🌱</div>
+                <h3>Welcome Aboard!</h3>
+                <p id="successMsg">You're now part of something bigger. A confirmation has been sent to your inbox — check it out and get ready to act.</p>
+                <div class="success-badge">🌍 Community Member</div>
+                <p style="font-size:0.78rem; color:#888; margin-top:4px;">Check your inbox for a welcome message.</p>
+            </div>
+        </div>
+
+        <!-- VALUES PANEL -->
+        <div class="values-panel">
+            <div class="value-card green">
+                <div class="v-icon">🌿</div>
+                <h4>Real Action, Not Just Noise</h4>
+                <p>We don't just talk. Every member commits to at least one local action per month — planting, cleaning, reducing, refusing.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="v-icon">🤝</div>
+                <h4>A Community That Holds You</h4>
+                <p>Accountability partners, monthly check-ins, and a network of people who actually care about the same things you do.</p>
+            </div>
+
+            <div class="value-card yellow">
+                <div class="v-icon">📖</div>
+                <h4>Knowledge You Can Use</h4>
+                <p>Curated guides, articles, and step-by-step personal actions delivered straight to your inbox. No spam. Ever.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="v-icon">🔥</div>
+                <h4>Stay Fired Up</h4>
+                <p>Monthly stories of impact, wins from the community, and reminders of exactly why this work matters — on the days it's hard.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        Clean Earth Initiative 2026 — Built by people who give a damn.
+    </footer>
+
+    <script>
+        // EmailJS SDK (free tier — sends actual emails)
+        // We'll use a mailto fallback that works without any backend
+        // For a real deployment, swap in EmailJS or FormSubmit
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function handleJoin() {
+            const name  = document.getElementById('userName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+
+            const nameInput  = document.getElementById('userName');
+            const emailInput = document.getElementById('userEmail');
+            const nameErr    = document.getElementById('nameError');
+            const emailErr   = document.getElementById('emailError');
+
+            // Reset
+            nameInput.classList.remove('error-field');
+            emailInput.classList.remove('error-field');
+            nameErr.style.display  = 'none';
+            emailErr.style.display = 'none';
+
+            let valid = true;
+
+            if (!name) {
+                nameInput.classList.add('error-field');
+                nameErr.style.display = 'block';
+                valid = false;
+            }
+
+            if (!email || !validateEmail(email)) {
+                emailInput.classList.add('error-field');
+                emailErr.style.display = 'block';
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            // Show loading
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Sending...';
+
+            // Simulate processing then open mail client with pre-filled thank-you email
+            setTimeout(() => {
+                sendWelcomeEmail(name, email);
+                showSuccess(name);
+            }, 1200);
+        }
+
+        function sendWelcomeEmail(name, email) {
+            const subject = encodeURIComponent("Welcome to the Clean Earth Initiative 🌿");
+            const body    = encodeURIComponent(
+`Hi ${name},
+
+Welcome to the Clean Earth Initiative. 🌍
+
+We are so glad you're here.
+
+The Earth isn't waiting — and neither are we. You've just joined a growing community of people who believe that individual action, multiplied by many, creates unstoppable change.
+
+Here's what you can look forward to as a member:
+
+✅ Monthly action guides — practical steps you can take right now, right where you live.
+✅ Community check-ins — because doing this together is always better than doing it alone.
+✅ Stories of real impact — proof that what we do actually matters.
+✅ Zero fluff — we respect your inbox and your time.
+
+The journey from a dirty world to a clean one doesn't happen overnight. But it does happen — one person at a time, one choice at a time, one day at a time.
+
+You just made a choice. That matters more than you know.
+
+Thank you for caring. Thank you for showing up. 
+The Earth notices, even when it can't say so.
+
+With hope and purpose,
+The Clean Earth Initiative Team 🌱
+
+——
+"We do not inherit the Earth from our ancestors. We borrow it from our children."
+`);
+            // Open the user's mail client to send themselves the welcome mail
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        }
+
+        function showSuccess(name) {
+            document.getElementById('formFields').style.display = 'none';
+            document.getElementById('successMsg').textContent =
+                `${name}, you're now part of something bigger. A welcome message is ready for your inbox — we've opened your mail client so you can send it to yourself.`;
+            const ss = document.getElementById('successState');
+            ss.style.display = 'flex';
+        }
+    </script>
+
+</body>
+</html>
