@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Earth | Steps</title>
+    <style>
+        /* --- NEOBRUTALIST VARIABLES & RESET --- */
+        :root {
+            --bg-color: #D6E4E5; 
+            --text-color: #111111;
+            --accent-green: #00FF66;
+            --border-thick: 6px solid #000;
+            --shadow-hard: 8px 8px 0px #000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 80px; }
+
+        h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 20px;}
+        
+        /* --- HEADER & NAV --- */
+        header { position: fixed; top: 0; width: 100%; padding: 15px 30px; border-bottom: var(--border-thick); display: flex; justify-content: space-between; align-items: center; background: #FFF; z-index: 100; }
+        .logo { font-size: 1.2rem; font-weight: 900; background: var(--accent-green); padding: 5px 15px; border: var(--border-thick); box-shadow: 4px 4px 0px #000; cursor: pointer;}
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .hamburger-btn { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; border: 3px solid #000; background: #fff; box-shadow: 3px 3px 0px #000; }
+        .hamburger-btn span { display: block; width: 24px; height: 3px; background: #000; }
+        
+        .nav-dropdown { position: fixed; top: 70px; right: 0; width: 280px; background: #fff; border-left: var(--border-thick); border-bottom: var(--border-thick); z-index: 200; display: none; flex-direction: column; }
+        .nav-dropdown.open { display: flex; }
+        .nav-dropdown a { display: block; padding: 16px 24px; font-weight: 900; font-size: 0.95rem; text-transform: uppercase; text-decoration: none; color: #111; border-bottom: 3px solid #000; }
+        .nav-dropdown a:hover { background: var(--accent-green); }
+
+        /* --- STEPS LAYOUT --- */
+        .steps-container { max-width: 900px; margin: 40px auto; padding: 20px; display: flex; flex-direction: column; gap: 40px; }
+        
+        .step-row {
+            display: flex;
+            background: #FFF;
+            border: var(--border-thick);
+            box-shadow: var(--shadow-hard);
+            align-items: stretch;
+        }
+
+        .step-number {
+            background: var(--text-color);
+            color: var(--accent-green);
+            font-size: 4rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            border-right: var(--border-thick);
+        }
+
+        .step-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step-content h2 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        .step-content p { font-size: 1rem; font-weight: 600; line-height: 1.4; }
+
+        @media (max-width: 600px) {
+            .step-row { flex-direction: column; }
+            .step-number { border-right: none; border-bottom: var(--border-thick); padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">INITIATIVE</div>
+        <div class="header-right">
+            <div style="font-weight: 900;">2026</div>
+            <div class="hamburger-btn" id="hamburgerBtn"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="initiative.html">Initiative</a>
+        <a href="steps.html">Steps You Can Take</a>
+        <a href="games.html">Games</a>
+    </nav>
+
+    <div class="steps-container">
+        <h1>Your Action Plan</h1>
+        
+        <div class="step-row">
+            <div class="step-number">01</div>
+            <div class="step-content">
+                <h2>Audit Your Trash</h2>
+                <p>For one week, don't just throw things away—look at them. Identify your biggest waste categories. Is it food packaging? Delivery boxes? Once you know the enemy, you can fight it.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number" style="color: #FF0055;">02</div>
+            <div class="step-content">
+                <h2>Master Segregation</h2>
+                <p>Implement a strict two-bin system at home: WET (organic, compostable) and DRY (recyclable plastics, paper, metal). Never mix the two. Contaminated recyclables end up in landfills.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number" style="color: #FFD700;">03</div>
+            <div class="step-content">
+                <h2>Eliminate Single-Use</h2>
+                <p>Stop buying bottled water. Carry a reusable coffee cup. Say no to plastic cutlery when ordering takeout. These tiny daily choices compound into massive environmental relief.</p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-number" style="color: #0077FF;">04</div>
+            <div class="step-content">
+                <h2>Start Composting</h2>
+                <p>Up to 30% of household waste is organic. Put a compost bin on your balcony or in your yard. Turn your food scraps into nutrient-rich soil instead of landfill methane.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('navDropdown').classList.toggle('open');
+        });
+        document.addEventListener('click', () => document.getElementById('navDropdown').classList.remove('open'));
+    </script>
+</body>
+</html>
