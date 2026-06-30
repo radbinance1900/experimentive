@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Earth | Games</title>
+    <style>
+        /* --- NEOBRUTALIST VARIABLES & RESET --- */
+        :root {
+            --bg-color: #D6E4E5; 
+            --text-color: #111111;
+            --accent-green: #00FF66;
+            --accent-pink: #FF0055;
+            --accent-yellow: #FFD700;
+            --border-thick: 6px solid #000;
+            --shadow-hard: 8px 8px 0px #000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; padding-top: 60px; }
+
+        h2 { font-size: clamp(1.5rem, 4vw, 3rem); text-transform: uppercase; font-weight: 900; margin-bottom: 10px; text-align: center; }
+        p { font-size: 1rem; font-weight: 600; text-align: center; margin-bottom: 20px; }
+
+        /* --- HEADER --- */
+        header { position: fixed; top: 0; width: 100%; padding: 15px 30px; border-bottom: var(--border-thick); display: flex; justify-content: space-between; align-items: center; background: #FFF; z-index: 100; }
+        .logo { font-size: 1.2rem; font-weight: 900; background: var(--accent-green); padding: 5px 15px; border: var(--border-thick); box-shadow: 4px 4px 0px #000; cursor: pointer; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .hamburger-btn { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; border: 3px solid #000; background: #fff; box-shadow: 3px 3px 0px #000; }
+        .hamburger-btn span { display: block; width: 24px; height: 3px; background: #000; }
+        
+        .nav-dropdown { position: fixed; top: 70px; right: 0; width: 280px; background: #fff; border-left: var(--border-thick); border-bottom: var(--border-thick); z-index: 200; display: none; flex-direction: column; }
+        .nav-dropdown.open { display: flex; }
+        .nav-dropdown a { display: block; padding: 16px 24px; font-weight: 900; font-size: 0.95rem; text-transform: uppercase; text-decoration: none; color: #111; border-bottom: 3px solid #000; }
+        .nav-dropdown a:hover { background: var(--accent-green); }
+
+        /* --- LAYOUT SECTIONS --- */
+        section { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; border-bottom: var(--border-thick); position: relative; }
+        
+        /* SWEEP GAME */
+        #game-sec { background-color: var(--accent-yellow); padding: 0; overflow: hidden; }
+        #sweepCanvas { display: block; width: 100%; height: 100%; cursor: none; }
+        .game-overlay { position: absolute; top: 40px; text-align: center; pointer-events: none; width: 100%; }
+
+        /* SORT GAME */
+        #sort-sec { background-color: #D6E4E5; }
+        .sort-game-area { width: 100%; max-width: 900px; position: relative; }
+        .sort-score-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .sort-score { font-size: 1.1rem; font-weight: 900; background: #fff; border: 4px solid #000; padding: 8px 18px; box-shadow: 4px 4px 0 #000; }
+        .sort-progress { height: 18px; background: #fff; border: 4px solid #000; flex: 1; min-width: 120px; }
+        .sort-progress-fill { height: 100%; background: var(--accent-green); transition: width 0.3s; }
+        .sort-bins-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; }
+        .sort-bin { flex: 1; min-height: 160px; border: var(--border-thick); box-shadow: var(--shadow-hard); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 14px 10px 10px; position: relative; cursor: pointer; user-select: none; }
+        .sort-bin:hover { transform: translate(-2px, -2px); box-shadow: 12px 12px 0 #000; }
+        .sort-bin:active { transform: translate(4px, 4px); box-shadow: 3px 3px 0 #000; }
+        .sort-bin.wet { background: #0077FF; }
+        .sort-bin.dry { background: var(--accent-yellow); }
+        .sort-bin-label { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; color: #000; }
+        .sort-bin-icon { font-size: 3rem; margin-bottom: 8px; }
+        .bin-flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+        .bin-flash.correct { background: rgba(0,255,102,0.5); opacity: 1; }
+        .bin-flash.wrong { background: rgba(255,0,85,0.5); opacity: 1; }
+        
+        .sort-pile { flex: 1.3; min-height: 160px; background: #fff; border: var(--border-thick); box-shadow: var(--shadow-hard); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+        .trash-item-icon { font-size: 2.8rem; animation: wobble 1.2s ease-in-out infinite; }
+        @keyframes wobble { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+        .trash-item-name { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; }
+        .sort-feedback { margin-top: 16px; min-height: 40px; font-size: 1.1rem; font-weight: 900; text-align: center; text-transform: uppercase; }
+        .sort-feedback.correct { color: #007733; }
+        .sort-feedback.wrong { color: var(--accent-pink); }
+        .sort-result { display: none; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+        
+        button { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; padding: 15px 30px; border: var(--border-thick); box-shadow: var(--shadow-hard); cursor: pointer; }
+        
+        @media (max-width: 768px) { .sort-bins-row { flex-direction: column; align-items: center; } .sort-bin, .sort-pile { width: 100%; flex: unset; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">INITIATIVE</div>
+        <div class="header-right">
+            <div style="font-weight: 900;">2026</div>
+            <div class="hamburger-btn" id="hamburgerBtn"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="initiative.html">Initiative</a>
+        <a href="steps.html">Steps You Can Take</a>
+        <a href="games.html">Games</a>
+    </nav>
+
+    <!-- SWEEP GAME -->
+    <section id="game-sec">
+        <div class="game-overlay">
+            <h2>Clean The Surface</h2>
+            <p>Hover your cursor to sweep the litter away.</p>
+        </div>
+        <canvas id="sweepCanvas"></canvas>
+    </section>
+
+    <!-- GARBAGE SORT GAME -->
+    <section id="sort-sec">
+        <h2>Sort The Garbage</h2>
+        <p>Pick up each item and toss it into the right bin — WET or DRY.</p>
+
+        <div class="sort-game-area">
+            <div class="sort-score-bar">
+                <div class="sort-score">Score: <span id="sortScore">0</span></div>
+                <div class="sort-progress"><div class="sort-progress-fill" id="sortProgress" style="width:0%"></div></div>
+                <div class="sort-score">Left: <span id="sortLeft">10</span></div>
+            </div>
+
+            <div id="sortActiveArea">
+                <div class="sort-bins-row">
+                    <div class="sort-bin wet" onclick="sortDrop('wet')">
+                        <div class="bin-flash" id="flashWet"></div>
+                        <div class="sort-bin-icon">🪣</div>
+                        <div class="sort-bin-label">WET</div>
+                    </div>
+
+                    <div class="sort-pile">
+                        <div class="trash-item" id="currentTrashDisplay">
+                            <div class="trash-item-icon" id="trashIcon">🍌</div>
+                            <div class="trash-item-name" id="trashName">Banana Peel</div>
+                        </div>
+                    </div>
+
+                    <div class="sort-bin dry" onclick="sortDrop('dry')">
+                        <div class="bin-flash" id="flashDry"></div>
+                        <div class="sort-bin-icon">🗑️</div>
+                        <div class="sort-bin-label">DRY</div>
+                    </div>
+                </div>
+                <div class="sort-feedback" id="sortFeedback"></div>
+            </div>
+
+            <div class="sort-result" id="sortResult">
+                <div style="font-size:4rem" id="resultEmoji">🏆</div>
+                <h3 id="resultTitle">Game Over!</h3>
+                <p id="resultMsg"></p>
+                <button onclick="resetSortGame()" style="background: var(--accent-green); color:#000;">Play Again</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Nav Menu
+        document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('navDropdown').classList.toggle('open');
+        });
+        document.addEventListener('click', () => document.getElementById('navDropdown').classList.remove('open'));
+
+        // --- SWEEP GAME JS ---
+        const canvas = document.getElementById('sweepCanvas');
+        const ctx = canvas.getContext('2d');
+        const section3 = document.getElementById('game-sec');
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 }; 
+        const colors = ['#FF0055', '#363636', '#111111', '#5c4a3d', '#FFF'];
+
+        function resizeCanvas() { canvas.width = section3.clientWidth; canvas.height = section3.clientHeight; initParticles(); }
+        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top; });
+        canvas.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+        class Litter {
+            constructor(x, surfaceY) {
+                this.x = x; this.size = Math.random() * 20 + 10; this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+                let yOffset = this.shape === 'rect' ? this.size : this.size / 2;
+                this.y = surfaceY - yOffset - (Math.random() * 40);
+                this.vx = 0; this.vy = 0; this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = 1; this.active = true;
+            }
+            update() {
+                if (!this.active) return;
+                const surfaceY = canvas.height / 1.5;
+                let dx = this.x - mouse.x; let dy = this.y - mouse.y; let dist = Math.sqrt(dx * dx + dy * dy);
+                const sweepRadius = 120;
+                if (dist < sweepRadius) {
+                    let force = (sweepRadius - dist) / sweepRadius; let swirlX = -dy * 0.08; let swirlY = dx * 0.08;
+                    this.vx += (dx / dist) * force * 3 + swirlX; this.vy += (dy / dist) * force * 3 + swirlY; this.opacity -= 0.015;
+                }
+                this.vx *= 0.88; this.vy *= 0.88; this.x += this.vx; this.y += this.vy;
+                let bottomEdge = this.shape === 'rect' ? this.y + this.size : this.y + (this.size / 2);
+                if (bottomEdge > surfaceY) { this.y = this.shape === 'rect' ? surfaceY - this.size : surfaceY - (this.size / 2); this.vy = 0; }
+                if (this.opacity <= 0) this.active = false;
+            }
+            draw() {
+                if (!this.active) return;
+                ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+                ctx.beginPath();
+                if (this.shape === 'rect') { ctx.rect(this.x, this.y, this.size, this.size); } else { ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2); }
+                ctx.fill(); ctx.stroke(); ctx.globalAlpha = 1;
+            }
+        }
+        function initParticles() { particles = []; const surfaceY = canvas.height / 1.5; for (let i = 0; i < 150; i++) particles.push(new Litter(Math.random() * canvas.width, surfaceY)); }
+        function drawBroom() {
+            ctx.fillStyle = '#FFD700'; ctx.strokeStyle = '#000'; ctx.lineWidth = 4; ctx.beginPath(); ctx.rect(mouse.x + 10, mouse.y - 40, 8, 50); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#FF0055'; ctx.beginPath(); ctx.moveTo(mouse.x - 15, mouse.y + 20); ctx.lineTo(mouse.x + 40, mouse.y + 20); ctx.lineTo(mouse.x + 25, mouse.y - 5); ctx.lineTo(mouse.x, mouse.y - 5); ctx.closePath(); ctx.fill(); ctx.stroke();
+        }
+        function animateSweep() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const surfaceY = canvas.height / 1.5; ctx.fillStyle = '#000'; ctx.fillRect(0, surfaceY, canvas.width, 12);
+            for (let p of particles) { p.update(); p.draw(); }
+            if (mouse.x !== -1000) drawBroom();
+            requestAnimationFrame(animateSweep);
+        }
+        resizeCanvas(); animateSweep();
+
+        // --- SORT GAME JS ---
+        const TRASH_ITEMS = [ { icon: '🍌', name: 'Banana Peel', type: 'wet' }, { icon: '🥬', name: 'Veggie Scraps', type: 'wet' }, { icon: '☕', name: 'Coffee Grounds', type: 'wet' }, { icon: '🍊', name: 'Orange Peel', type: 'wet' }, { icon: '🥚', name: 'Eggshell', type: 'wet' }, { icon: '📰', name: 'Newspaper', type: 'dry' }, { icon: '🧴', name: 'Plastic Bottle', type: 'dry' }, { icon: '📦', name: 'Cardboard Box', type: 'dry' }, { icon: '🥫', name: 'Tin Can', type: 'dry' }, { icon: '💡', name: 'Old Bulb', type: 'dry' } ];
+        const CORRECT_MSGS = ['✅ Correct!', '✅ Nailed it!', '✅ Perfect sort!'];
+        const WRONG_MSGS = ['❌ Oops! Wrong bin.', '❌ Not quite!', '❌ Wrong!'];
+        let sortQueue = [], sortScoreVal = 0, sortTotal = 10, sortDone = 0;
+
+        function shuffleArray(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function resetSortGame() {
+            sortScoreVal = 0; sortDone = 0; sortQueue = shuffleArray(TRASH_ITEMS);
+            document.getElementById('sortScore').textContent = 0; document.getElementById('sortLeft').textContent = sortTotal;
+            document.getElementById('sortProgress').style.width = '0%'; document.getElementById('sortFeedback').textContent = '';
+            document.getElementById('sortFeedback').className = 'sort-feedback'; document.getElementById('sortResult').style.display = 'none';
+            document.getElementById('sortActiveArea').style.display = 'block'; showNextTrash();
+        }
+        function showNextTrash() {
+            if (sortQueue.length === 0) { endSortGame(); return; }
+            const item = sortQueue[0]; document.getElementById('trashIcon').textContent = item.icon; document.getElementById('trashName').textContent = item.name;
+            document.getElementById('sortFeedback').textContent = ''; document.getElementById('sortFeedback').className = 'sort-feedback';
+        }
+        function sortDrop(bin) {
+            if (sortQueue.length === 0) return;
+            const item = sortQueue.shift(); const flashEl = bin === 'wet' ? document.getElementById('flashWet') : document.getElementById('flashDry');
+            const feedEl = document.getElementById('sortFeedback');
+            sortDone++; document.getElementById('sortLeft').textContent = sortTotal - sortDone; document.getElementById('sortProgress').style.width = ((sortDone / sortTotal) * 100) + '%';
+            if (item.type === bin) {
+                sortScoreVal++; document.getElementById('sortScore').textContent = sortScoreVal;
+                feedEl.textContent = CORRECT_MSGS[Math.floor(Math.random() * CORRECT_MSGS.length)]; feedEl.className = 'sort-feedback correct'; flashEl.className = 'bin-flash correct';
+            } else {
+                feedEl.textContent = WRONG_MSGS[Math.floor(Math.random() * WRONG_MSGS.length)]; feedEl.className = 'sort-feedback wrong'; flashEl.className = 'bin-flash wrong';
+            }
+            setTimeout(() => { flashEl.className = 'bin-flash'; }, 300); setTimeout(() => { showNextTrash(); }, 600);
+        }
+        function endSortGame() {
+            document.getElementById('sortActiveArea').style.display = 'none'; document.getElementById('sortResult').style.display = 'flex';
+            const pct = sortScoreVal / sortTotal; let emoji, title, msg;
+            if (pct === 1) { emoji = '🏆'; title = 'Perfect Score!'; msg = `${sortScoreVal}/${sortTotal} — Zero errors!`; }
+            else if (pct >= 0.7) { emoji = '🌿'; title = 'Great Sorting!'; msg = `${sortScoreVal}/${sortTotal} — Solid effort.`; }
+            else if (pct >= 0.4) { emoji = '♻️'; title = 'Getting There.'; msg = `${sortScoreVal}/${sortTotal} — Needs improvement.`; }
+            else { emoji = '🗑️'; title = 'Needs Work.'; msg = `${sortScoreVal}/${sortTotal} — The landfill thanks you, but the planet doesn't.`; }
+            document.getElementById('resultEmoji').textContent = emoji; document.getElementById('resultTitle').textContent = title; document.getElementById('resultMsg').textContent = msg;
+        }
+        resetSortGame();
+    </script>
+</body>
+</html>
