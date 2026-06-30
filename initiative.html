@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Earth | Initiative</title>
+    <style>
+        /* --- NEOBRUTALIST VARIABLES & RESET --- */
+        :root {
+            --bg-color: #D6E4E5; 
+            --text-color: #111111;
+            --accent-green: #00FF66;
+            --accent-pink: #FF0055;
+            --accent-yellow: #FFD700;
+            --border-thick: 6px solid #000;
+            --shadow-hard: 8px 8px 0px #000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; padding-top: 80px; }
+
+        h1 { font-size: clamp(2.3rem, 6.7vw, 5rem); font-weight: 900; text-transform: uppercase; line-height: 0.9; letter-spacing: -2px; margin-bottom: 20px; text-align: center; }
+        h2 { font-size: 2.5rem; text-transform: uppercase; font-weight: 900; margin-bottom: 15px; }
+        p { font-size: 1rem; font-weight: 600; max-width: 800px; line-height: 1.5; }
+
+        /* --- HEADER & NAV --- */
+        header { position: fixed; top: 0; width: 100%; padding: 15px 30px; border-bottom: var(--border-thick); display: flex; justify-content: space-between; align-items: center; background: #FFF; z-index: 100; }
+        .logo { font-size: 1.2rem; font-weight: 900; background: var(--accent-green); padding: 5px 15px; border: var(--border-thick); box-shadow: 4px 4px 0px #000; cursor: pointer;}
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .hamburger-btn { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; border: 3px solid #000; background: #fff; box-shadow: 3px 3px 0px #000; transition: all 0.1s; }
+        .hamburger-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0px #000; }
+        .hamburger-btn span { display: block; width: 24px; height: 3px; background: #000; }
+        
+        .nav-dropdown { position: fixed; top: 70px; right: 0; width: 280px; background: #fff; border-left: var(--border-thick); border-bottom: var(--border-thick); z-index: 200; display: none; flex-direction: column; }
+        .nav-dropdown.open { display: flex; }
+        .nav-dropdown a { display: block; padding: 16px 24px; font-weight: 900; font-size: 0.95rem; text-transform: uppercase; text-decoration: none; color: #111; border-bottom: 3px solid #000; }
+        .nav-dropdown a:hover { background: var(--accent-green); }
+        .nav-dropdown a .nav-tag { font-size: 0.65rem; font-weight: 700; color: #888; display: block; margin-top: 2px; }
+
+        /* --- INITIATIVE CONTENT --- */
+        .page-header { padding: 60px 20px; text-align: center; border-bottom: var(--border-thick); background: #FFF; }
+        
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 60px 40px; max-width: 1200px; margin: 0 auto; }
+        
+        .card { border: var(--border-thick); padding: 30px; box-shadow: var(--shadow-hard); }
+        .card.pink { background: var(--accent-pink); color: #FFF; }
+        .card.yellow { background: var(--accent-yellow); color: #000; }
+        .card.green { background: var(--accent-green); color: #000; }
+        
+        .card h2 { border-bottom: 4px solid currentColor; padding-bottom: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">INITIATIVE</div>
+        <div class="header-right">
+            <div style="font-weight: 900;">2026</div>
+            <div class="hamburger-btn" id="hamburgerBtn">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home <span class="nav-tag">Back to main</span></a>
+        <a href="initiative.html">Initiative <span class="nav-tag">What we stand for</span></a>
+        <a href="steps.html">Steps You Can Take <span class="nav-tag">Personal actions</span></a>
+        <a href="games.html">Games <span class="nav-tag">Learn while you play</span></a>
+    </nav>
+
+    <section class="page-header">
+        <h1>Our Core Mission</h1>
+        <p style="margin: 0 auto;">We are a collective dedicated to brute-forcing a cleaner future. No greenwashing, no corporate buzzwords. Just actionable change.</p>
+    </section>
+
+    <div class="grid-container">
+        <div class="card pink">
+            <h2>The Problem</h2>
+            <p>Our consumption has outpaced our planet's ability to regenerate. Microplastics are in our blood, landfills are overflowing, and our oceans are choking.</p>
+        </div>
+        <div class="card yellow">
+            <h2>Our Vision</h2>
+            <p>A zero-waste ecosystem where every byproduct is a resource. We envision cities that clean their own air and communities that actively restore their local environments.</p>
+        </div>
+        <div class="card green">
+            <h2>The Method</h2>
+            <p>Education through blunt reality. We build tools, spread awareness, and organize local cleanups. We don't ask for permission to clean up our own home.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('navDropdown').classList.toggle('open');
+        });
+        document.addEventListener('click', () => document.getElementById('navDropdown').classList.remove('open'));
+    </script>
+</body>
+</html>
